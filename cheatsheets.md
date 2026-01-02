@@ -8,7 +8,7 @@ ftp -p <host> <port> <username> <pass> # FTP connection in passive mode. <port>,
 
 # Banner Grabbing
 
-netcat <target> <port>
+netcat <target> <port> # Listens on a TCP port (bind shell listener)
 ncat <target> <port>
 nc <target> <port>
 nc -nv <target> <port>
@@ -32,3 +32,8 @@ smbclient -U <user> \\\\<target>\\<smb share> # Authenticates to an SMB share us
 
 snmpwalk -v <version> -c <community> <target> <OID> # Queries an SNMP device using a specified SNMP version and community string to retrieve the value of a given OID.
 onesixtyone -c <community_list> <target> # Brute-forces SNMP community strings on the target host.
+
+# Web Enumeration
+
+## Gobuster
+gobuster dir -u <target> -w <file> # Performs directory brute-forcing.
