@@ -15,14 +15,13 @@ fi
 SEARCH="$1"
 
 awk -v term="$SEARCH" '
-BEGIN { found=0 }
+BEGIN { in_section=0 }
 /^#/ {
-  if (found) exit
   if (tolower($0) ~ tolower(term)) {
-    found=1
-    print
-    next
+    in_section=1
+  } else if (in_section) {
+    exit  # Found next section, stop
   }
 }
-found { print }
+in_section { print }
 ' "$FILE"
