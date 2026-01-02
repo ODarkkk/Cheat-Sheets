@@ -9,6 +9,7 @@ ssh <user>@<host>
 netcat <ip> <port>
 ncat <ip> <port>
 nc <ip> <port>
+nc -nv <ip> <port>
 
 # Scan
 

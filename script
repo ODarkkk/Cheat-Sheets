@@ -8,8 +8,8 @@ if [ ! -f "$FILE" ]; then
 fi
 
 if [ -z "$1" ]; then
-  echo "Usage: cheatsheets <search term>"
-  exit 1
+  less "$FILE"
+  exit 0
 fi
 
 SEARCH="$1"
