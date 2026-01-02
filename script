@@ -1,0 +1,28 @@
+#!/bin/bash
+
+FILE="$HOME/cheatsheets.md"
+
+if [ ! -f "$FILE" ]; then
+  echo "Cheatsheet file not found: $FILE"
+  exit 1
+fi
+
+if [ -z "$1" ]; then
+  echo "Usage: cheatsheets <search term>"
+  exit 1
+fi
+
+SEARCH="$1"
+
+awk -v term="$SEARCH" '
+BEGIN { found=0 }
+/^#/ {
+  if (found) exit
+  if (tolower($0) ~ tolower(term)) {
+    found=1
+    print
+    next
+  }
+}
+found { print }
+' "$FILE"
