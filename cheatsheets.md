@@ -18,7 +18,7 @@ nc -nv <target> <port>
 ## nmap
 nmap <target> # Only scan the 1000 most common ports by default.
 nmap -sV -sC -p- <target> # Full TCP port scan with service discovery and default scripts
-nmap -sC -sV -vv -oA -p- <file> <target> # Full TCP port scan with service/version detection, default scripts, verbose output, and saved results.
+nmap -sC -sV -vv -p- -oA <file> <target> # Full TCP port scan with service/version detection, default scripts, verbose output, and saved results.
 nmap --script <script name> -p<port> <target> # Runs a specific NSE script against a chosen port on the target host
 nmap -sV --script=banner <target> # Detects running services and retrieves service banners from the target
 nmap -A -p <ports> <target> # Performs aggressive scanning (OS detection, version detection, scripts, traceroute) on specified ports.
