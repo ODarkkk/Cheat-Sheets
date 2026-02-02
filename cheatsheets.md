@@ -29,7 +29,6 @@ smbclient \\\\<target>\\<smb share> # Accesses a specific SMB share on the targe
 smbclient -U <user> \\\\<target>\\<smb share> # Authenticates to an SMB share using a specific user account.
 
 ## SNMP
-
 snmpwalk -v <version> -c <community> <target> <OID> # Queries an SNMP device using a specified SNMP version and community string to retrieve the value of a given OID.
 onesixtyone -c <community_list> <target> # Brute-forces SNMP community strings on the target host.
 
@@ -37,3 +36,16 @@ onesixtyone -c <community_list> <target> # Brute-forces SNMP community strings o
 
 ## Gobuster
 gobuster dir -u <target> -w <file> # Performs directory brute-forcing.
+
+# MAC Address Spoofing
+sudo ifconfig eth0 down # Disables the eth0 network interface so changes can be applied.
+sudo ifconfig eth0 up # Re-enables the eth0 network interface after changes are made
+
+## MAC Changer
+sudo macchanger -m <mac address> eth0 # Changes the MAC address of eth0 to the specified value.
+macchanger -s eth0 # Displays the current and original MAC address of eth0.
+
+# OSINT
+
+## Spidefoot
+spiderfoot -l <ip>:<port>  # Starts the SpiderFoot web interface and listens on the specified IP address and port.
