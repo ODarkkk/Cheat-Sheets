@@ -45,6 +45,10 @@ sudo ifconfig eth0 up # Re-enables the eth0 network interface after changes are 
 sudo macchanger -m <mac address> eth0 # Changes the MAC address of eth0 to the specified value.
 macchanger -s eth0 # Displays the current and original MAC address of eth0.
 
+# URL
+## Curl
+curl -v <target> # Sends a verbose HTTP request, displaying headers and connection details
+
 # OSINT
 
 ## Spidefoot
