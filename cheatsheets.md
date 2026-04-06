@@ -45,7 +45,36 @@ sudo ifconfig eth0 up # Re-enables the eth0 network interface after changes are 
 sudo macchanger -m <mac address> eth0 # Changes the MAC address of eth0 to the specified value.
 macchanger -s eth0 # Displays the current and original MAC address of eth0.
 
+# URL
+## Curl
+curl -v <target> # Sends a verbose HTTP request, displaying headers and connection details
+
 # OSINT
 
 ## Spidefoot
 spiderfoot -l <ip>:<port>  # Starts the SpiderFoot web interface and listens on the specified IP address and port.
+
+## Google Dorks
+
+| #  | Dork        | Description                                               | Usage Example               |
+| :- | :---------- | :-------------------------------------------------------- | :-------------------------- |
+| 1  | site:       | Searches within a specific site.                          | site:example.com            |
+| 2  | filetype:   | Searches for a specific file type.                        | filetype:pdf                |
+| 3  | intitle:    | Searches for pages with specific words in the title.      | intitle:"login"             |
+| 4  | inurl:      | Searches for pages with specific words in the URL.        | inurl:admin                 |
+| 5  | cache:      | Displays pages stored in Google's cache.                  | cache:example.com           |
+| 6  | link:       | Finds pages that link to a specific page.                 | link:example.com            |
+| 7  | related:    | Finds sites similar to a specific site.                   | related:example.com         |
+| 8  | intext:     | Searches for specific words within the page text.         | intext:"password"           |
+| 9  | allintitle: | Searches for pages with all specified words in the title. | allintitle:login admin      |
+| 10 | allinurl:   | Searches for pages with all specified words in the URL.   | allinurl:admin login        |
+| 11 | allintext:  | Searches for pages with all specified words in the text.  | allintext:username password |
+| 12 | define:     | Searches for the definition of a specific word.           | define:OSINT                |
+| 13 | "keyword"   | Searches for an exact phrase.                             | "admin login"               |
+| 14 | -keyword    | Excludes pages containing a specific word.                | password -example           |
+| 15 | OR          | Searches for pages containing either of two words.        | login OR signup             |
+| 16 | *           | Acts as a wildcard for any word.                          | intitle:"admin *"           |
+| 17 | ..          | Searches for numbers within a range.                      | filetype:pdf 2020..2022     |
+| 18 | info:       | Displays information about a specific site.               | info:example.com            |
+| 19 | maps:       | Shows the map of a specific location.                     | maps:New York               |
+| 20 | stocks:     | Shows stock information for a specific company.           | stocks:GOOG                 |
