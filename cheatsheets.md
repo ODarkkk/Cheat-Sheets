@@ -5,6 +5,137 @@
 ssh <user>@<host>
 ftp -p <host> <port> <username> <pass> # FTP connection in passive mode. <port>, <username> and <pass> are optional
 
+# Terminal
+
+## Tmux
+
+prefix: Ctrl+B
+
+### Sessions
+#### Session management
+tmux new -s <name> # New named session
+Ctrl+B $ # Rename session
+Ctrl+B d # Detach session
+Ctrl+B s # List / switch sessions
+
+#### TPM & plugins
+Prefix + Shift+I # Install plugins
+Prefix + Shift+P # Purge removed plugins
+Prefix + Alt+P #Previous plugin
+Prefix + Alt+Shift+P #Update plugins
+
+### Panes & windows
+#### Splitting & navigation
+Prefix + Shift+% # Split pane vertically
+Prefix + Shift+" # Split pane horizontally
+Prefix + o # Cycle to next pane
+Prefix + Alt+C # New window
+
+#### Misc & copy mode
+Ctrl+G # Cancel / abort prompt
+Ctrl+S # Save session (tmux-resurrect)
+Ctrl+X #Restore session (tmux-resurrect)
+Prefix + Ctrl+@ # Join pane
+Prefix + Ctrl+! # Break pane to new window
+
+## Vim
+
+### Modes
+#### Mode switching
+i # Insert before cursor
+I # Insert at line start
+a # Append after cursor
+A # Append at line end
+o # New line below
+O # New line above
+v # Visual mode
+V # Visual line mode
+Ctrl+V # Visual block mode
+: # Command-line mode
+R # Replace mode
+Esc # Back to normal mode
+
+### Motion
+#### Character & word
+h j k l # ←↓↑→
+w / W # Next word / WORD
+b / B # Prev word / WORD
+e / E # End of word / WORD
+0 / $ # Line start / end
+^ # First non-blank char
+
+#### File & screen
+gg / G # File start / end
+:N # Go to line N
+Ctrl+D / U # Half-page down / up
+Ctrl+F / B # Full-page down / up
+% # Jump to matching bracket
+zz # Centre line on screen
+
+### Editing
+#### Delete, change, yank
+x # Delete char under cursor
+dd # Delete line
+dw # Delete word
+DD # elete to end of line
+cc # Change line
+cw # Change word
+yy # Yank (copy) line
+yw # Yank word
+p / P # Paste after / before
+
+#### Undo, redo & repeat
+u # Undo
+Ctrl+R # Redo
+. # Repeat last change
+r # Replace single char
+~ # Toggle case
+J # Join line below
+>> / << # Indent / de-indent
+Ctrl+A # Increment number
+
+### Search & replace
+#### Search
+/pattern # Search forward
+?pattern # Search backward
+n / N # Next / prev match
+* / # # Word under cursor ↓ / ↑
+:noh # Clear highlights
+
+#### Substitute
+:s/old/new # Replace first on line
+:s/old/new/g # Replace all on line
+:%s/old/new/g # Replace all in file
+:%s/old/new/gc # Replace with confirm
+
+### File & buffers
+#### Save & quit
+:w # Save
+:wq / ZZ # Save and quit
+:q! / ZQ # Quit without saving
+:wa # Save all buffers
+:e <file> # Open file
+
+#### Windows & splits
+:sp # Horizontal split
+:vsp # Vertical split
+Ctrl+W W # Switch split
+Ctrl+W +/- # Resize split
+:bnext / :bprev # Next / prev buffer
+
+### Marks, macros & tips
+#### Marks & jumps
+m{a-z} # Set mark
+'{a-z} # Jump to mark
+Ctrl+O / I # Prev / next jump
+gi # Return to last insert
+
+#### Macros
+q{a-z} # Start recording macro
+q # Stop recording
+@{a-z} # Play macro
+@@ # Replay last macro
+N@{a} # Run macro N times
 
 # Banner Grabbing
 
