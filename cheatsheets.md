@@ -6,8 +6,27 @@ mkdir -p ACME-IPT/{Admin,Deliverables,Evidence/{Findings,Scans/{Vuln,Service,Web
 
 # Access
 
+## SSH
 ssh <user>@<host>
+
+### Encrypton 
+ssh-keygen -t rsa -b 2048  # Generates a 2048-bit RSA SSH key pair for passwordless authentication
+ssh-copy-id user@backup_server  # Copies your public SSH key to a remote server, enabling passwordless login.
 ftp -p <host> <port> <username> <pass> # FTP connection in passive mode. <port>, <username> and <pass> are optional
+
+# Backup
+
+## rsync
+*
+rsync -av /path/to/mydirectory user@backup_server:/path/to/bac*kup/directory # Recursively copies a local directory to a remote server over SSH, preserving file attributes and displaying verbose output
+rsync -av user@remote_host:/path/to/backup/directory /path/to/mydirectory  # Pulls a directory from a remote server to a local destination, preserving file attributes and displaying verbose output
+rsync -avz -e ssh /path/to/mydirectory user@backup_server:/path/to/backup/directory  # Syncs a local directory to a remote server explicitly over SSH with compression enabled
+rsync -avz --backup --backup-dir=/path/to/backup/folder --delete /path/to/mydirectory user@backup_server:/path/to/backup/directory # Syncs a local directory to a remote server over SSH with compresion, moves overwritten/deleted files to a backup folder, and removes files on the destination that no longer exist at the source
+rsync -avz -e ssh /path/to/mydirectory user@backup_server:/path/to/backup/directory  # Syncs a local directory to a remote server explicitly over SSH with compression enabled
+
+## Crontab
+crontab -e  # Opens the current user's crontab file in the default editor for scheduling automated tasks
+* * * * * /path/to/file.sh # Every minute (m=*), every hour (h=*), every day of the month (d=*), every month (M=*), every day of the week (w=*)
 
 # Terminal
 
@@ -153,7 +172,7 @@ nc -nv <target> <port>
 ## nmap
 nmap <target> # Only scan the 1000 most common ports by default.
 nmap -sV -sC -p- <target> # Full TCP port scan with service discovery and default scripts
-nmap -sC -sV -vv -p- -oA <file> <target> # Full TCP port scan with service/version detection, default scripts, verbose output, and saved results.
+nmap -sC -sV -vv -O -p- -oA <file> <target> # Full TCP port scan with service/version detection, default scripts, OS detection, verbose output, and saved results in all formats.
 nmap --script <script name> -p<port> <target> # Runs a specific NSE script against a chosen port on the target host
 nmap -sV --script=banner <target> # Detects running services and retrieves service banners from the target
 nmap -A -p <ports> <target> # Performs aggressive scanning (OS detection, version detection, scripts, traceroute) on specified ports.
@@ -231,3 +250,5 @@ spiderfoot -l <ip>:<port>  # Starts the SpiderFoot web interface and listens on 
 | 18 | info:       | Displays information about a specific site.               | info:example.com            |
 | 19 | maps:       | Shows the map of a specific location.                     | maps:New York               |
 | 20 | stocks:     | Shows stock information for a specific company.           | stocks:GOOG                 |
+
+
