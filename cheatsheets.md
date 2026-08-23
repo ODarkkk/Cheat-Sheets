@@ -22,7 +22,7 @@ ftp -p <host> <port> <username> <pass> # FTP connection in passive mode. <port>,
 # Backup
 
 ## rsync
-rsync -av /path/to/mydirectory user@backup_server:/path/to/bac*kup/directory # Recursively copies a local directory to a remote server over SSH, preserving file attributes and displaying verbose output
+rsync -av /path/to/mydirectory user@backup_server:/path/to/backup/directory # Recursively copies a local directory to a remote server over SSH, preserving file attributes and displaying verbose output
 rsync -av user@remote_host:/path/to/backup/directory /path/to/mydirectory  # Pulls a directory from a remote server to a local destination, preserving file attributes and displaying verbose output
 rsync -avz -e ssh /path/to/mydirectory user@backup_server:/path/to/backup/directory  # Syncs a local directory to a remote server explicitly over SSH with compression enabled
 rsync -avz --backup --backup-dir=/path/to/backup/folder --delete /path/to/mydirectory user@backup_server:/path/to/backup/directory # Syncs a local directory to a remote server over SSH with compresion, moves overwritten/deleted files to a backup folder, and removes files on the destination that no longer exist at the source
@@ -103,7 +103,7 @@ zz # Centre line on screen
 x # Delete char under cursor
 dd # Delete line
 dw # Delete word
-DD # elete to end of line
+DD # Delete to end of line
 cc # Change line
 cw # Change word
 yy # Yank (copy) line
@@ -188,6 +188,26 @@ smbclient -U <user> \\\\<target>\\<smb share> # Authenticates to an SMB share us
 ## SNMP
 snmpwalk -v <version> -c <community> <target> <OID> # Queries an SNMP device using a specified SNMP version and community string to retrieve the value of a given OID.
 onesixtyone -c <community_list> <target> # Brute-forces SNMP community strings on the target host.
+
+## Firmware Analysis
+### Binwalk
+binwalk <file> # Scans a file for embedded signatures (filesystems, compression, executables, etc.)
+binwalk -e <file> # Extracts identified files/data automatically to a folder
+binwalk -Me <file> # Recursively scans and extracts nested/embedded content (matryoshka mode)
+binwalk -B <file> # Signature scan only (raw magic byte detection), no extraction
+binwalk -A <file> # Scans for executable code / CPU architecture signatures
+binwalk -E <file> # Runs entropy analysis to spot compressed or encrypted regions
+binwalk --dd='.*' <file> # Extracts all identified data blocks regardless of file type
+binwalk -Y <file> # Scans for YARA rule matches (custom pattern signatures)
+
+### Firmadyne
+./sources/extractor/extractor.py -b <brand> -sql 148.166.71.1 -np -nk <firmware.bin> images/ # Extracts filesystem and metadata from a firmware image into the firmadyne database
+./scripts/getArch.sh <extracted.tar.gz> # Identifies target CPU architecture of the extracted firmware
+./scripts/tar2db.py -i <image_id> -b <brand> -f <extracted.tar.gz> # Loads extracted firmware image info into the firmadyne SQL database
+./scripts/makeImage.sh <image_id> # Builds an emulatable QEMU disk image from the extracted firmware
+./scripts/getNetwork.sh <image_id> # Identifies network interfaces used by the firmware for emulation
+./scripts/inferNetwork.sh <image_id> # Infers network configuration needed to boot firmware with correct interfaces
+./scratch/<image_id>/run.sh # Boots the firmware image in QEMU for dynamic analysis/emulation
 
 # Penetration testing
 
