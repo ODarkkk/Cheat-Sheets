@@ -225,6 +225,18 @@ sysinfo  # To view the victim's system information
 shell  # To access the command line on the victim's computer
 screenshot  # To take a screenshot of the victim's screen
 
+# Wireless
+
+## Aircrack-ng suite
+airmon-ng start wlan0 # Puts the wireless interface into monitor mode
+airodump-ng wlan0mon # Scans and lists nearby access points and connected clients
+airmon-ng check # Lists processes that may interfere with monitor mode
+airmon-ng check kill # Kills those interfering processes so monitor mode works cleanly
+airodump-ng -c <channel> --bssid <BSSID> -w <file> wlan0mon # Captures traffic/handshakes for a specific target AP
+aireplay-ng --deauth <count> -a <BSSID> -c <client MAC> wlan0mon # Sends deauth packets to force a client to reconnect (capture handshake)
+aircrack-ng -w <wordlist> -b <BSSID> <capture file> # Cracks a captured WPA/WPA2 handshake using a wordlist
+airmon-ng stop wlan0mon # Stops monitor mode and restores managed mode
+
 # Web Enumeration
 
 ## Gobuster
@@ -243,6 +255,21 @@ macchanger -s eth0 # Displays the current and original MAC address of eth0.
 # URL
 ## Curl
 curl -v <target> # Sends a verbose HTTP request, displaying headers and connection details
+curl -I <target> # Sends a HEAD request, showing only response headers (quick banner/tech check)
+curl -X POST -d "user=admin&pass=admin" <target> # Sends a POST request with URL-encoded form data
+curl -X POST -H "Content-Type: application/json" -d '{"key":"value"}' <target> # Sends a POST request with a JSON body
+curl -H "Header: value" <target> # Adds a custom HTTP header to the request
+curl -A "<user-agent string>" <target> # Sets a custom User-Agent (useful for bypassing basic UA filtering)
+curl -b "session=<cookie value>" <target> # Sends a request with a specified cookie
+curl -c cookies.txt <target> # Saves response cookies to a file
+curl -L <target> # Follows HTTP redirects automatically
+curl -k <target> # Ignores SSL/TLS certificate validation errors
+curl -o <file> <target> # Saves the response body to a local file
+curl -u <user>:<pass> <target> # Sends a request with HTTP Basic Authentication
+curl -x <proxy>:<port> <target> # Routes the request through a specified proxy 
+curl --resolve <domain>:<port>:<ip> <target> # Forces resolution of a hostname to a specific IP (useful for virtual host testing)
+curl -s -o /dev/null -w "%{http_code}\n" <target> # Silently fetches and prints only the HTTP status code
+curl -v --http1.1 <target> # Forces the request to use HTTP/1.1 (useful for spotting protocol-related quirks)
 
 # OSINT
 
