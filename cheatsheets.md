@@ -216,7 +216,8 @@ binwalk -Y <file> # Scans for YARA rule matches (custom pattern signatures)
 
 LHOST / LPORT # Always YOUR (attacker) machine - IP/port Metasploit listens on or connects from
 RHOST / RHOSTS # The target machine(s) being scanned or exploited
-RPORT # The port on the target machine
+SSL true/false # Enables or disables SSL/TLS for the connection (needed for modules targeting HTTPS services)
+LHOST tun0 # Sets LHOST to the IP address currently assigned to the tun0 interface (e.g. VPN/OpenVPN tunnel) instead of a hardcoded IP
 
 #### Metasploit — Core Workflow
 
