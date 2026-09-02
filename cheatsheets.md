@@ -185,6 +185,7 @@ nmap -p- -sV -sC <target> -T5 -Pn # Full TCP port scan with service/version dete
 nmap --script <script name> -p<port> <target> # Runs a specific NSE script against a chosen port on the target host
 nmap -sV --script=banner <target> # Detects running services and retrieves service banners from the target
 nmap -A -p <ports> <target> # Performs aggressive scanning (OS detection, version detection, scripts, traceroute) on specified ports.
+sudo nmap 10.129.2.18 -sn -oA host -PE --packet-trace # Host discovery scan (no port scan) using ICMP echo requests, showing raw packet trace output, saved in all formats
 
 ## smb
 smbclient -N -L \\\\<target> # Lists available SMB shares on the target host without authentication.
