@@ -187,6 +187,7 @@ nmap -sV --script=banner <target> # Detects running services and retrieves servi
 nmap -A -p <ports> <target> # Performs aggressive scanning (OS detection, version detection, scripts, traceroute) on specified ports.
 sudo nmap 10.129.2.18 -sn -oA host -PE --packet-trace # Host discovery scan (no port scan) using ICMP echo requests, showing raw packet trace output, saved in all formats
 sudo nmap 10.129.2.18 -sn -oA host -PE --reason # Host discovery scan (no port scan) using ICMP echo requests, showing the reason each host was marked up/down, saved in all formats
+sudo nmap 10.129.2.18 -sn -oA host -PE --packet-trace --disable-arp-ping # Host discovery scan using ICMP echo requests only, showing packet trace output, saved in all formats, with ARP ping disabled
 
 ## smb
 smbclient -N -L \\\\<target> # Lists available SMB shares on the target host without authentication.
