@@ -185,9 +185,15 @@ nmap -p- -sV -sC <target> -T5 -Pn # Full TCP port scan with service/version dete
 nmap --script <script name> -p<port> <target> # Runs a specific NSE script against a chosen port on the target host
 nmap -sV --script=banner <target> # Detects running services and retrieves service banners from the target
 nmap -A -p <ports> <target> # Performs aggressive scanning (OS detection, version detection, scripts, traceroute) on specified ports.
-sudo nmap 10.129.2.18 -sn -oA host -PE --packet-trace # Host discovery scan (no port scan) using ICMP echo requests, showing raw packet trace output, saved in all formats
-sudo nmap 10.129.2.18 -sn -oA host -PE --reason # Host discovery scan (no port scan) using ICMP echo requests, showing the reason each host was marked up/down, saved in all formats
-sudo nmap 10.129.2.18 -sn -oA host -PE --packet-trace --disable-arp-ping # Host discovery scan using ICMP echo requests only, showing packet trace output, saved in all formats, with ARP ping disabled
+sudo nmap <target> -sn -oA host -PE --packet-trace # Host discovery scan (no port scan) using ICMP echo requests, showing raw packet trace output, saved in all formats
+sudo nmap <target> -sn -oA host -PE --reason # Host discovery scan (no port scan) using ICMP echo requests, showing the reason each host was marked up/down, saved in all formats
+sudo nmap <target> -sn -oA host -PE --packet-trace --disable-arp-ping # Host discovery scan using ICMP echo requests only, showing packet trace output, saved in all formats, with ARP ping disabled
+sudo nmap <target> -p <ports> -sS -Pn -n --disable-arp-ping --packet-trace # SYN scan on specific ports, skipping host discovery and DNS resolution, with ARP ping disabled, showing packet trace
+sudo nmap <target> -p <ports> -sA -Pn -n --disable-arp-ping --packet-trace # ACK scan on specific ports (used to map firewall rules/filtering, not to detect open ports directly)
+sudo nmap <target> -p <port> -sS -Pn -n --disable-arp-ping --packet-trace -D RND:<count> # SYN scan with a number of random decoy IPs added to obscure the real scanning source
+sudo nmap <target> -n -Pn -p <port> -O # OS detection scan against a specific port, skipping DNS resolution and host discovery
+sudo nmap <target> -n -Pn -p <port> -O -S <spoofed IP> -e <interface> # OS detection scan using a spoofed source IP (-S) sent out through a specific interface (-e)
+sudo nmap <target> -p <port> -sS -Pn -n --disable-arp-ping --packet-trace --source-port <port> # SYN scan spoofing the source port, often used to bypass firewalls that trust traffic from common service ports (e.g. 53/DNS)
 
 ## smb
 smbclient -N -L \\\\<target> # Lists available SMB shares on the target host without authentication.
