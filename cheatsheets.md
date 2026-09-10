@@ -194,6 +194,8 @@ sudo nmap <target> -p <port> -sS -Pn -n --disable-arp-ping --packet-trace -D RND
 sudo nmap <target> -n -Pn -p <port> -O # OS detection scan against a specific port, skipping DNS resolution and host discovery
 sudo nmap <target> -n -Pn -p <port> -O -S <spoofed IP> -e <interface> # OS detection scan using a spoofed source IP (-S) sent out through a specific interface (-e)
 sudo nmap <target> -p <port> -sS -Pn -n --disable-arp-ping --packet-trace --source-port <port> # SYN scan spoofing the source port, often used to bypass firewalls that trust traffic from common service ports (e.g. 53/DNS)
+sudo nmap -g53 --max-retries=1 -Pn -p- --disable-arp-ping <target> # Full TCP port scan spoofing the source port as 53 (DNS), retrying failed probes only once, skipping host discovery, with ARP ping disabled
+sudo nmap --disable-arp-ping -p53 -sU -sC <target> # UDP scan on port 53 with default scripts, ARP ping disabled (useful for DNS service enumeration)
 
 ## smb
 smbclient -N -L \\\\<target> # Lists available SMB shares on the target host without authentication.
@@ -349,6 +351,7 @@ wget https://github.com/peass-ng/PEASS-ng/releases/latest/download/linpeas.sh # 
 bash linpeas.sh -a -N > linpeas_results.txt # Runs LinPEAS with all checks (-a) and no colored output (-N), saving results to a file
 ./linpeas.sh > linpeas_results.txt # Runs LinPEAS with default checks and saves the output to a file
 curl -L https://github.com/peass-ng/PEASS-ng/releases/latest/download/linpeas.sh | sh # Downloads and executes LinPEAS directly in memory without saving to disk
+curl -s https://crt.sh/\?q\=inlanefreight.com\&output\=json | jq .
 
 ## Wpscan
 
@@ -410,6 +413,21 @@ curl -s -o /dev/null -w "%{http_code}\n" <target> # Silently fetches and prints 
 curl -v --http1.1 <target> # Forces the request to use HTTP/1.1 (useful for spotting protocol-related quirks)
 
 # OSINT
+
+## Subdomain Enumeration
+curl -s https://crt.sh/\?q\=<target>&output=json | jq . # Queries crt.sh's certificate transparency logs for a domain and pretty-prints the JSON results
+curl -s https://crt.sh/\?q\=<target>&output=json | jq . | grep name | cut -d":" -f2 | grep -v "CN=" | cut -d'"' -f2 | awk '{gsub(/\n/,"\n");}1;' | sort -u # Extracts and deduplicates subdomain names from crt.sh certificate results, excluding the "CN=" field
+for i in $(cat subdomainlist);do host $i | grep "has address" | grep <target> | cut -d" " -f1,4;done # Resolves a list of subdomains to IPs, printing only entries matching the target domain (hostname + IP)
+for i in $(cat subdomainlist);do host $i | grep "has address" | grep <target> | cut -d" " -f4 >> ip-addresses.txt;done # Resolves a list of subdomains and saves only the matching IP addresses to a file
+shodan init <API key> # Authenticates the Shodan CLI with your API key (required once before using shodan commands)
+for i in $(cat ip-addresses.txt);do shodan host $i;done # Queries Shodan for details on each IP in a list (open ports, services, banners)
+dig any <target> # Queries all available DNS record types for a domain (deprecated/rate-limited by many resolvers — query individual types instead when possible)
+dig A <target> # Queries the domain's IPv4 address record(s)
+dig AAAA <target> # Queries the domain's IPv6 address record(s)
+dig MX <target> # Queries the domain's mail exchange (MX) records
+dig TXT <target> # Queries the domain's TXT records (often used for SPF, DKIM, domain verification)
+dig NS <target> # Queries the domain's authoritative name server records
+dig CNAME <target> # Queries the domain's canonical name (alias) record
 
 ## Spiderfoot
 spiderfoot -l <ip>:<port>  # Starts the SpiderFoot web interface and listens on the specified IP address and port.
