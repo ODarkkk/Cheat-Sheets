@@ -206,6 +206,17 @@ smbclient -U <user> \\\\<target>\\<smb share> # Authenticates to an SMB share us
 snmpwalk -v <version> -c <community> <target> <OID> # Queries an SNMP device using a specified SNMP version and community string to retrieve the value of a given OID.
 onesixtyone -c <community_list> <target> # Brute-forces SNMP community strings on the target host.
 
+## RPCClient
+for i in $(seq 500 1100);do rpcclient -N -U "" <target> -c "queryuser 0x$(printf '%x\n' $i)" | grep "User Name|user_rid|group_rid" && echo "";done # Brute-forces RIDs 500–1100 via a null SMB session, querying each user's name and RID/group RID (RID cycling attack)
+rpcclient -U "" <target> # Connects to the target with a null session (no credentials)
+rpcclient -U "<user>%<password>" <target> # Connects using a valid username and password
+rpcclient $> srvinfo # Displays server information
+rpcclient $> enumdomusers # Enumerates domain users
+rpcclient $> enumdomgroups # Enumerates domain groups
+rpcclient $> querydominfo # Displays domain information (policies, password requirements)
+rpcclient $> lsaquery # Queries the LSA for the domain SID
+rpcclient $> lookupsids <SID> # Resolves a SID to a username
+
 ## Firmware Analysis
 ### Binwalk
 binwalk <file> # Scans a file for embedded signatures (filesystems, compression, executables, etc.)
