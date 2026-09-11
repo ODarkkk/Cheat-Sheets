@@ -207,15 +207,34 @@ snmpwalk -v <version> -c <community> <target> <OID> # Queries an SNMP device usi
 onesixtyone -c <community_list> <target> # Brute-forces SNMP community strings on the target host.
 
 ## RPCClient
-for i in $(seq 500 1100);do rpcclient -N -U "" <target> -c "queryuser 0x$(printf '%x\n' $i)" | grep "User Name|user_rid|group_rid" && echo "";done # Brute-forces RIDs 500–1100 via a null SMB session, querying each user's name and RID/group RID (RID cycling attack)
 rpcclient -U "" <target> # Connects to the target with a null session (no credentials)
 rpcclient -U "<user>%<password>" <target> # Connects using a valid username and password
-rpcclient $> srvinfo # Displays server information
+rpcclient -U "<user>" -N <target> # Connects using a username with no password prompt (null password)
+
+### Enumeration (inside rpcclient interactive shell)
+rpcclient $> srvinfo # Displays server information (OS version, server type)
 rpcclient $> enumdomusers # Enumerates domain users
 rpcclient $> enumdomgroups # Enumerates domain groups
-rpcclient $> querydominfo # Displays domain information (policies, password requirements)
+rpcclient $> enumalsgroups builtin # Enumerates built-in alias groups
+rpcclient $> enumalsgroups domain # Enumerates domain alias groups
+rpcclient $> querydominfo # Displays domain information (name, SID, password policy)
+rpcclient $> getdompwinfo # Displays domain password policy (min length, complexity)
 rpcclient $> lsaquery # Queries the LSA for the domain SID
+rpcclient $> lookupnames <username> # Resolves a username to a SID
 rpcclient $> lookupsids <SID> # Resolves a SID to a username
+rpcclient $> queryuser <RID/username> # Displays detailed info about a specific user (RID, name, description)
+rpcclient $> querygroup <RID> # Displays detailed info about a specific group
+rpcclient $> queryusergroups <RID> # Lists the groups a specific user belongs to
+rpcclient $> querygroupmem <RID> # Lists the members of a specific group
+rpcclient $> netshareenum # Lists all network shares
+rpcclient $> netshareenumall # Lists all network shares, including hidden/admin ones
+rpcclient $> enumprinters # Enumerates shared printers
+rpcclient $> getusrdompwinfo <RID> # Displays a specific user's password policy info
+rpcclient $> createdomuser <username> # Creates a new domain user (requires sufficient privileges)
+rpcclient $> deletedomuser <username> # Deletes a domain user (requires sufficient privileges)
+
+### RID Cycling / Brute-forcing
+for i in $(seq 500 1100);do rpcclient -N -U "" <target> -c "queryuser 0x$(printf '%x\n' $i)" | grep "User Name|user_rid|group_rid" && echo "";done # Brute-forces RIDs 500-1100 via a null SMB session, querying each user's name and RID/group RID (RID cycling attack)
 
 ## Firmware Analysis
 ### Binwalk
