@@ -198,6 +198,14 @@ sudo nmap -g53 --max-retries=1 -Pn -p- --disable-arp-ping <target> # Full TCP po
 sudo nmap --disable-arp-ping -p53 -sU -sC <target> # UDP scan on port 53 with default scripts, ARP ping disabled (useful for DNS service enumeration)
 sudo nmap <target> -p25 --script smtp-open-relay -v # Checks if the target's SMTP server on port 25 is configured as an open relay, with verbose output 
 
+## smtp-user-enum
+
+smtp-user-enum -M VRFY -U <wordlist> -t <target> -m 60 -w 20 # Enumerates valid SMTP usernames using the VRFY method, with a 60-second timeout and 20 concurrent worker threads
+smtp-user-enum -M EXPN -U <wordlist> -t <target> # Enumerates users via the EXPN method (expands a mailing list to reveal member addresses)
+smtp-user-enum -M RCPT -U <wordlist> -t <target> # Enumerates users via the RCPT TO method (often works when VRFY/EXPN are disabled)
+smtp-user-enum -M VRFY -u <username> -t <target> # Verifies a single specific username instead of a wordlist
+smtp-user-enum -M VRFY -U <wordlist> -T <targets.txt> # Runs enumeration against multiple target hosts from a file
+
 ## smb
 smbclient -N -L \\\\<target> # Lists available SMB shares on the target host without authentication.
 smbclient \\\\<target>\\<smb share> # Accesses a specific SMB share on the target.
