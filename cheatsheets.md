@@ -196,6 +196,7 @@ sudo nmap <target> -n -Pn -p <port> -O -S <spoofed IP> -e <interface> # OS detec
 sudo nmap <target> -p <port> -sS -Pn -n --disable-arp-ping --packet-trace --source-port <port> # SYN scan spoofing the source port, often used to bypass firewalls that trust traffic from common service ports (e.g. 53/DNS)
 sudo nmap -g53 --max-retries=1 -Pn -p- --disable-arp-ping <target> # Full TCP port scan spoofing the source port as 53 (DNS), retrying failed probes only once, skipping host discovery, with ARP ping disabled
 sudo nmap --disable-arp-ping -p53 -sU -sC <target> # UDP scan on port 53 with default scripts, ARP ping disabled (useful for DNS service enumeration)
+sudo nmap <target> -p25 --script smtp-open-relay -v # Checks if the target's SMTP server on port 25 is configured as an open relay, with verbose output 
 
 ## smb
 smbclient -N -L \\\\<target> # Lists available SMB shares on the target host without authentication.
