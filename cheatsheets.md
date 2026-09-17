@@ -213,7 +213,12 @@ smbclient -U <user> \\\\<target>\\<smb share> # Authenticates to an SMB share us
 
 ## SNMP
 snmpwalk -v <version> -c <community> <target> <OID> # Queries an SNMP device using a specified SNMP version and community string to retrieve the value of a given OID.
+snmpwalk -v2c -c public <target> 1.3.6.1.2.1.25.1.6.0 # Queries the SNMP OID for running processes (system.processes)
+snmpwalk -v2c -c public <target> 1.3.6.1.2.1.25.4.2.1.2 # Queries the SNMP OID for running software/programs
+snmpwalk -v2c -c public <target> 1.3.6.1.2.1.25.6.3.1.2 # Queries the SNMP OID for installed software packages
+snmpwalk -v2c -c public <target> 1.3.6.1.4.1.77.1.2.25 # Queries the SNMP OID for Windows user accounts (via NET-SNMP/Windows MIB)
 onesixtyone -c <community_list> <target> # Brute-forces SNMP community strings on the target host.
+braa <community string>@<target>:.1.3.6.* # Performs a fast bulk SNMP walk starting from the specified OID branch, faster than snmpwalk for large-scale enumeration
 
 ## RPCClient
 rpcclient -U "" <target> # Connects to the target with a null session (no credentials)
