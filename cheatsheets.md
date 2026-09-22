@@ -286,6 +286,10 @@ impacket-ticketer -nthash <NT hash> -domain-sid <SID> -domain <domain> <username
 impacket-lookupsid <domain>/<user>:<password>@<target> # Performs SID brute-forcing via RPC to enumerate domain users (similar to rpcclient RID cycling)
 impacket-samrdump <domain>/<user>:<password>@<target> # Enumerates users, groups, and shares via SAMR
 
+## dnsenum
+
+dnsenum --dnsserver <DNS server> --enum -p 0 -s 0 -f <wordlist> <target> # Brute-forces subdomains against a specific internal DNS server using a wordlist, with page size (-p) and max results (-s) disabled to return all results
+
 ## RPCClient
 rpcclient -U "" <target> # Connects to the target with a null session (no credentials)
 rpcclient -U "<user>%<password>" <target> # Connects using a valid username and password
