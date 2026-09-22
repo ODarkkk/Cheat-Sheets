@@ -521,6 +521,7 @@ dig MX <target> # Queries the domain's mail exchange (MX) records
 dig TXT <target> # Queries the domain's TXT records (often used for SPF, DKIM, domain verification)
 dig NS <target> # Queries the domain's authoritative name server records
 dig CNAME <target> # Queries the domain's canonical name (alias) record
+dig AXFR <target> @<DNS server> # Attempts a DNS zone transfer, dumping all records for the domain if the server is misconfigured to allow it
 
 ## Spiderfoot
 spiderfoot -l <ip>:<port>  # Starts the SpiderFoot web interface and listens on the specified IP address and port.
