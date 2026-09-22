@@ -4,6 +4,9 @@
 ## Directory structure
 mkdir -p ACME-IPT/{Admin,Deliverables,Evidence/{Findings,Scans/{Vuln,Service,Web,'AD Enumeration'},Notes,OSINT,Wireless,'Logging output','Misc Files'},Retest}
 
+## /etc/hosts
+sudo sh -c 'echo "<target IP> <hostname>" >> /etc/hosts' # Appends a hostname-to-IP mapping to /etc/hosts, useful for resolving internal domains not in public DNS
+
 # Access
 
 ## SSH
